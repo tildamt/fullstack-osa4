@@ -10,7 +10,19 @@ blogsRouter.get('/', (request, response) => {
   })
 
 blogsRouter.post('/', (request, response) => {
-    const blog = new Blog(request.body)
+    const { title, url, likes, ...params} = request.body
+
+    if (!title || !url) {
+        return response.status(400).json({error: 'title and url are required'})
+    }
+    const data = {
+        likes: likes !== undefined ? likes : 0,
+        title,
+        url,
+        ...params
+    }
+
+    const blog = new Blog(data)
   
     blog
       .save()
