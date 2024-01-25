@@ -81,6 +81,44 @@ test('title and url are required', async () => {
 
 })
 
+test('remove a blog by id', async () => {
+
+  const initialBlogs = await Blog.find({})
+  const blogToDelete = initialBlogs[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+  
+  const result = await Blog.find({})
+
+  expect(result).toHaveLength(initialBlogs.length - 1)
+
+  const ids = result.map(r => r.id)
+
+  expect(ids).not.toContain(blogToDelete.id)
+})
+
+test('change info for a blog', async () => {
+
+  const updatedData = {
+    title: 'Updated Title',
+    author: 'Updated Author',
+    url: 'http://updated.com',
+    likes: 100,
+  }
+
+  const initialBlogs = await Blog.find({})
+  const blogToUpdate = initialBlogs[0]
+
+  const result = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedData)
+
+  expect(result.body).toMatchObject(updatedData)
+  
+})
+
 afterAll(async() => {
     await mongoose.connection.close()
 })
