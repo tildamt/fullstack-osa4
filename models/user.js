@@ -9,7 +9,13 @@ const userSchema = mongoose.Schema({
     passwordHash: {
         type: String,
         minlength: 3
-    }
+    },
+    blogs: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Blog'
+        }
+    ],
 })
 
 userSchema.set('toJSON', {

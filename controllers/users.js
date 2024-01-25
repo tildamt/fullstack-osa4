@@ -3,12 +3,10 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 
 usersRouter.get('/', async (request, response) => {
-    try {
-      const users = await User.find({})
-      response.json(users)
-    } catch (error) {
-      response.status(500).json({ error: 'Internal server error' })
-    }
+    
+    const users = await User
+        .find({}).populate('blogs')
+    response.json(users)
   })
 
 usersRouter.post('/', async (request, response) => {
